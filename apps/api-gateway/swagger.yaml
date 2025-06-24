@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+  title: URL Shortener API Gateway
+  version: 1.0.0
+  description: Central API Gateway for URL Shortener Microservices
+servers:
+  - url: http://localhost:5000/api
+    description: API Gateway Local
+tags:
+  - name: Gateway Health
+    description: Gateway health checks and metrics
+  - name: Auth Proxy
+    description: Proxy for Auth Service endpoints
+  - name: URLs Proxy
+    description: Proxy for URL Service endpoints
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /health:
+    get:
+      summary: API Gateway Health Check
+      tags:
+        - Gateway Health
+      responses:
+        "200":
+          description: Gateway is healthy
+  /metrics:
+    get:
+      summary: Prometheus Metrics
+      tags:
+        - Gateway Health
+      responses:
+        "200":
+          description: Prometheus metrics data
+  /auth/register:
+    x-proxy-target: auth-service
+    post:
+      summary: Register a new user (Proxied to Auth Service)
+      tags:
+        - Auth Proxy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string, example: "John Doe" }
+                email:
+                  {
+                    type: string,
+                    format: email,
+                    example: "john.doe@example.com",
+                  }
+                password:
+                  { type: string, format: password, example: "securepass" }
+      responses:
+        "201":
+          description: User registered successfully
+        "400":
+          description: Validation error
+        "409":
+          description: User with email already exists
+  /auth/login:
+    x-proxy-target: auth-service
+    post:
+      summary: Log in a user (Proxied to Auth Service)
+      tags:
+        - Auth Proxy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  {
+                    type: string,
+                    format: email,
+                    example: "john.doe@example.com",
+                  }
+                password:
+                  { type: string, format: password, example: "securepass" }
+      responses:
+        "200":
+          description: Logged in successfully
+        "401":
+          description: Invalid credentials
+  /auth/google:
+    x-proxy-target: auth-service
+    get:
+      summary: Initiate Google OAuth login (Proxied to Auth Service)
+      tags:
+        - Auth Proxy
+      responses:
+        "302":
+          description: Redirects to Google for authentication
+  /auth/google/callback:
+    x-proxy-target: auth-service
+    get:
+      summary: Google OAuth callback (Proxied to Auth Service)
+      tags:
+        - Auth Proxy
+      responses:
+        "302":
+          description: Redirects to frontend with token
+  /urls/shorten:
+    x-proxy-target: url-service
+    post:
+      summary: Shorten a long URL (Proxied to URL Service)
+      tags:
+        - URLs Proxy
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                originalUrl:
+                  {
+                    type: string,
+                    format: url,
+                    example: "https://www.google.com",
+                  }
+      responses:
+        "201":
+          description: URL shortened successfully
+        "400":
+          description: Invalid URL
+  /urls/my-urls:
+    x-proxy-target: url-service
+    get:
+      summary: Get user's shortened URLs (Proxied to URL Service)
+      tags:
+        - URLs Proxy
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of URLs
+        "401":
+          description: Authentication required

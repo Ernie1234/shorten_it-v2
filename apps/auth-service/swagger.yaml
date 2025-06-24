@@ -1,0 +1,157 @@
+openapi: 3.0.0
+info:
+  title: Auth Service API
+  version: 1.0.0
+  description: API documentation for the User Authentication Service
+servers:
+  - url: http://localhost:5001/api/auth # This is the internal Auth Service port
+    description: Auth Service Local
+  # When deployed, the API Gateway will proxy to this, so this URL isn't directly exposed
+tags:
+  - name: Auth
+    description: User authentication and authorization
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 60c72b2f9c1b3c001c8c4a4e
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /register:
+    post:
+      summary: Register a new user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                  example: Jane Doe
+                email:
+                  type: string
+                  format: email
+                  example: jane.doe@example.com
+                password:
+                  type: string
+                  format: password
+                  example: securepassword123
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  message:
+                    { type: string, example: "User registered successfully!" }
+                  data:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: Validation error
+        "409":
+          description: User with this email already exists
+        "500":
+          description: Server error
+  /login:
+    post:
+      summary: Log in a user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: jane.doe@example.com
+                password:
+                  type: string
+                  format: password
+                  example: securepassword123
+      responses:
+        "200":
+          description: Logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  message: { type: string, example: "Logged in successfully!" }
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        $ref: "#/components/schemas/User"
+                      token:
+                        {
+                          type: string,
+                          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                        }
+        "400":
+          description: Validation error
+        "401":
+          description: Invalid credentials
+        "500":
+          description: Server error
+  /google:
+    get:
+      summary: Initiate Google OAuth login
+      tags:
+        - Auth
+      responses:
+        "302":
+          description: Redirects to Google for authentication
+  /google/callback:
+    get:
+      summary: Google OAuth callback
+      tags:
+        - Auth
+      description: This endpoint is called by Google after successful authentication. It redirects to the frontend with a JWT token.
+      responses:
+        "302":
+          description: Redirects to the frontend application with a JWT token.
+        "401":
+          description: Google authentication failed.
+        "500":
+          description: Server error.
