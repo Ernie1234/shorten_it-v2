@@ -16,7 +16,8 @@
     "URL_SERVICE_PORT",
     "REDIS_PASSWORD",
     "REDIS_HOST",
-    "REDIS_PORT"
+    "REDIS_PORT",
+    "NODE_ENV"
   ],
   "tasks": {
     "build": {
@@ -32,6 +33,14 @@
     },
     "clean": {
       "cache": false
+    },
+    "start": {
+      "cache": false,
+      "persistent": true
+    },
+    "check-types": {
+      "outputs": [],
+      "dependsOn": ["^check-types"]
     }
   }
 }
