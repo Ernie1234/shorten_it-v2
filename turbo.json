@@ -10,7 +10,13 @@
     "GOOGLE_CLIENT_SECRET",
     "GOOGLE_CALLBACK_URL",
     "WEB_APP_URL",
-    "MOBILE_APP_URL"
+    "MOBILE_APP_URL",
+    "API_GATEWAY_PORT",
+    "AUTH_SERVICE_PORT",
+    "URL_SERVICE_PORT",
+    "REDIS_PASSWORD",
+    "REDIS_HOST",
+    "REDIS_PORT"
   ],
   "tasks": {
     "build": {
