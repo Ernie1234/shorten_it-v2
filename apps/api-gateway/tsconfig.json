@@ -33,7 +33,8 @@
       "@repo/types": ["../../packages/types/src/index.ts"],
       "@repo/utils": ["../../packages/utils/src/index.ts"]
     },
-    "types": ["node"]
+    "types": ["node"],
+    "typeRoots": ["../../node_modules/@types", "./node_modules/@types"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "../../packages/**/*.ts"],
   "exclude": ["node_modules", "dist"]
