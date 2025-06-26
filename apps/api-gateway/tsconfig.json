@@ -1,10 +1,10 @@
 {
-  "extends": "@repo/config/tsconfig.json",
+  "extends": "../../packages/config/tsconfig.json",
   "compilerOptions": {
     // Environment setup & latest features
     "lib": ["ESNext"],
     "target": "ESNext",
-    "module": "Preserve",
+    "module": "EsNext",
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
@@ -27,9 +27,14 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
     "outDir": "./dist",
-    "rootDir": "./src",
-    "baseUrl": "."
+    "rootDir": "../..",
+    "baseUrl": ".",
+    "paths": {
+      "@repo/types": ["../../packages/types/src/index.ts"],
+      "@repo/utils": ["../../packages/utils/src/index.ts"]
+    },
+    "types": ["node"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "../../packages/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
