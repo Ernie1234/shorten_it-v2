@@ -25,8 +25,7 @@
       "@repo/types/*": ["./packages/types/*"],
       "@repo/db/*": ["./packages/db/*"],
       "@repo/utils/*": ["./packages/utils/*"]
-    },
-    "outDir": "dist"
+    }
   },
   "include": ["apps/**/*", "packages/**/*", ".eslintrc.js", "prettier.config.js"],
   "exclude": ["node_modules"]
