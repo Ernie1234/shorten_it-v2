@@ -1,11 +1,11 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   shortenUrl,
   redirectToOriginalUrl,
   validate,
   createUrlSchema,
   getUserUrls,
-} from "../controllers/urlController";
+} from '../controllers/urlController';
 
 const router = Router();
 
@@ -91,30 +91,7 @@ const router = Router();
  *       500:
  *         description: Server error
  */
-router.post("/shorten", validate(createUrlSchema), shortenUrl);
-
-/**
- * @swagger
- * /api/urls/{shortCode}:
- *   get:
- *     summary: Redirect to the original URL
- *     tags: [URLs]
- *     parameters:
- *       - in: path
- *         name: shortCode
- *         required: true
- *         schema:
- *           type: string
- *         description: The short code of the URL
- *     responses:
- *       302:
- *         description: Redirects to the original URL
- *       404:
- *         description: Short URL not found
- *       500:
- *         description: Server error
- */
-router.get("/:shortCode", redirectToOriginalUrl);
+router.post('/shorten', validate(createUrlSchema), shortenUrl);
 
 /**
  * @swagger
@@ -147,6 +124,29 @@ router.get("/:shortCode", redirectToOriginalUrl);
  *       500:
  *         description: Server error
  */
-router.get("/my-urls", getUserUrls);
+router.get('/my-urls', getUserUrls);
+
+/**
+ * @swagger
+ * /api/urls/{shortCode}:
+ *   get:
+ *     summary: Redirect to the original URL
+ *     tags: [URLs]
+ *     parameters:
+ *       - in: path
+ *         name: shortCode
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The short code of the URL
+ *     responses:
+ *       302:
+ *         description: Redirects to the original URL
+ *       404:
+ *         description: Short URL not found
+ *       500:
+ *         description: Server error
+ */
+router.get('/:shortCode', redirectToOriginalUrl);
 
 export default router;

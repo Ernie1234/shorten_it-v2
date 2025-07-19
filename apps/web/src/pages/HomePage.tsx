@@ -116,9 +116,9 @@ function HomePage() {
             <ul className="space-y-4">
               {myUrlsData?.map((url) => (
                 <li key={url._id} className="rounded-md bg-gray-50 p-4 shadow-sm">
-                  <p className="truncate text-sm text-gray-500">{url.originalUrl}</p>
+                  <p className="max-w-prose truncate text-sm text-gray-500">{url.originalUrl}</p>
                   <a
-                    href={`http://localhost:5000/${url.shortCode}`}
+                    href={`http://localhost:5000/api/urls/${url.shortCode}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-medium break-all text-blue-600 hover:underline"

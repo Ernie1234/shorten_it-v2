@@ -1,3 +1,4 @@
+// path: url-shortener-monorepo\apps\web\src\App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
@@ -8,7 +9,15 @@ import './index.css';
 
 // PrivateRoute component to protect routes
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-100">
+        <p className="text-lg text-gray-700">Loading authentication...</p>
+      </div>
+    );
+  }
+
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
 };
 
@@ -21,17 +30,12 @@ function App() {
           <Route
             path="/"
             element={
-              // <HomePage />
               <PrivateRoute>
                 <HomePage />
               </PrivateRoute>
-              // For a public URL shortener, HomePage can be public.
-              // Uncomment PrivateRoute if you want to enforce login for shortening.
-              // However, 'My URLs' section already depends on isAuthenticated.
             }
           />
-          {/* Catch-all for any other routes */}
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </AuthProvider>

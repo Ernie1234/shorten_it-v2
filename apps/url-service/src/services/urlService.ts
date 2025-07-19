@@ -1,13 +1,10 @@
-import Url from "../models/Url";
-import type { IUrl } from "@repo/types";
-import { customAlphabet } from "nanoid";
-import { ApiError } from "@repo/utils";
+import Url from '../models/Url';
+import type { IUrl } from '@repo/types';
+import { customAlphabet } from 'nanoid';
+import { ApiError, logger } from '@repo/utils';
 
 // Generate a short code of 7 characters using alphanumeric characters
-const nanoid = customAlphabet(
-  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-  7,
-);
+const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 7);
 
 /**
  * Creates a new short URL entry in the database.
@@ -15,15 +12,14 @@ const nanoid = customAlphabet(
  * @param userId Optional user ID if the URL is linked to a user.
  * @returns The newly created URL document.
  */
-export const createShortUrl = async (
-  originalUrl: string,
-  userId?: string,
-): Promise<IUrl> => {
+export const createShortUrl = async (originalUrl: string, userId: string): Promise<IUrl> => {
   let shortCode = nanoid();
   // Ensure the generated short code is unique
   while (await Url.findOne({ shortCode })) {
     shortCode = nanoid();
   }
+
+  logger.info(`User id that is creating in urlService: ${userId}`);
 
   const newUrl = await Url.create({
     originalUrl,
@@ -38,16 +34,14 @@ export const createShortUrl = async (
  * @param shortCode The short code to look up.
  * @returns The URL document if found.
  */
-export const getOriginalUrlAndIncrementClicks = async (
-  shortCode: string,
-): Promise<IUrl> => {
+export const getOriginalUrlAndIncrementClicks = async (shortCode: string): Promise<IUrl> => {
   const urlEntry = await Url.findOneAndUpdate(
     { shortCode },
     { $inc: { clicks: 1 } }, // Increment clicks
     { new: true }, // Return the updated document
   );
   if (!urlEntry) {
-    throw new ApiError(404, "Short URL not found.");
+    throw new ApiError(404, 'Short URL not found.');
   }
   return urlEntry;
 };

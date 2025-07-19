@@ -106,12 +106,10 @@ const apiLimiter = rateLimit({
   message: { success: false, message: 'Too many requests, please try again later!' },
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  keyGenerator: (req: Request) => req.ip || 'unknown-ip', // Fallback for req.ip to satisfy TypeScript
+  keyGenerator: (req: Request) => req.ip || 'unknown-ip',
 });
-app.use(apiLimiter); // Apply the rate limiter to all requests
-// --- END NEW: express-rate-limit configuration ---
-
-app.use(authenticateToken); // Ensure authentication runs AFTER rate limiting
+app.use(apiLimiter);
+app.use(authenticateToken);
 
 // Swagger Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -120,14 +118,30 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/auth', proxy(process.env.AUTH_SERVICE_URL || 'http://localhost:5001'));
 
 // URL Service Proxy - Strip /api/urls prefix before forwarding
-app.use('/api/urls', proxy(process.env.URL_SERVICE_URL || 'http://localhost:5002'));
-
-// Direct URL Redirection (assuming shortCode is handled at the root of URL service)
+// app.use('/api/urls', proxy(process.env.URL_SERVICE_URL || 'http://localhost:5002'));
+// URL Service Proxy - Strip /api/urls prefix before forwarding
 app.use(
-  'api/urls/:shortCode([a-zA-Z0-9]{7})',
-  proxy(process.env.URL_SERVICE_URL || 'http://localhost:5002'),
+  '/api/urls',
+  proxy(process.env.URL_SERVICE_URL || 'http://localhost:5002', {
+    proxyReqPathResolver: (req) => {
+      return req.url; // Use original URL path relative to '/api/urls'
+    },
+    proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
+      // If user is authenticated in the gateway, pass user ID to the service
+      if (srcReq.user && srcReq.user.id) {
+        proxyReqOpts.headers = {
+          ...proxyReqOpts.headers,
+          'X-User-Id': srcReq.user.id,
+          'X-User-Email': srcReq.user.email,
+        };
+        logger.debug(`[API Gateway] Forwarding request with X-User-Id: ${srcReq.user.id}`);
+      } else {
+        logger.debug('[API Gateway] Forwarding unauthenticated request to URL Service.');
+      }
+      return proxyReqOpts;
+    },
+  }),
 );
-
 // Health endpoints
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).send('API Gateway is healthy!');

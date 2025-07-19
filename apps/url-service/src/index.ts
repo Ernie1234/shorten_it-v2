@@ -87,7 +87,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 app.use('/', urlRoutes);
-app.get('/:shortCode', urlRoutes);
 
 // Health Check
 app.get('/health', (req, res) => res.status(200).send('URL Service is healthy!'));
