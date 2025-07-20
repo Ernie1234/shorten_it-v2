@@ -36,6 +36,7 @@
     },
     "start": {
       "cache": false,
+      "dependsOn": ["build"],
       "persistent": true
     },
     "check-types": {
