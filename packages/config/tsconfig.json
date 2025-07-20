@@ -1,22 +1,19 @@
 // packages/config/tsconfig.json (This is your base config for apps)
 {
-  "$schema": "https://json.schemastore.org/tsconfig", // Optional: for schema validation
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    // Environment setup & latest features
-    // Keep 'DOM' and 'DOM.Iterable' here for web apps, or provide separate configs for node vs web.
-    // For backend, "lib": ["ESNext"] and "types": ["node"] is often enough.
-    "lib": ["ESNext", "DOM", "DOM.Iterable"], // Keep these for frontend, or specialize configs
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "target": "ESNext",
     "module": "ESNext",
     "moduleDetection": "force",
-    "jsx": "react-jsx", // Keep for React apps, remove for pure Node.js
+    "jsx": "react-jsx",
     "allowJs": true,
 
     // Bundler mode
     "moduleResolution": "bundler",
     // "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
-    "noEmit": false, // This config should generally not emit, but apps overriding it will set false.
+    "noEmit": false,
 
     // Best practices
     "strict": true,
@@ -29,15 +26,6 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
-
-    // NO rootDir or outDir in this BASE config
-    // NO baseUrl or paths in this BASE config unless it's a very specific, carefully managed setup.
-    // These should be defined in individual app/package tsconfig.json files, relative to *their* location.
-
-    // If this config is meant to be extended by ALL apps (both web and node),
-    // you might define 'types' here, but it's often better to do it per-app or via specific extends.
-    "types": ["node"] // Keep this here to ensure Node.js types are included by default.
+    "types": ["node"]
   }
-  // "include" and "exclude" should generally NOT be in this base config
-  // or should be very general (e.g., just "*.ts", "*.d.ts")
 }
