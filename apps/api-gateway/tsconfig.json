@@ -27,7 +27,7 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
     "outDir": "./dist",
-    "rootDir": "../../",
+    "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
       "@repo/types": ["../../packages/types/src/index.ts"],
@@ -37,6 +37,6 @@
     "typeRoots": ["../../node_modules/@types", "./node_modules/@types"],
     "traceResolution": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "../../packages/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
