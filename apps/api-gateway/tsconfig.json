@@ -27,7 +27,7 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
     "outDir": "./dist",
-    "rootDir": "../..",
+    "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
       "@repo/types": ["../../packages/types/src/index.ts"],
