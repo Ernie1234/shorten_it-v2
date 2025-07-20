@@ -5,8 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "nodemon --exec bun src/index.ts",
-    "build": "tsc",
-    "start": "bun ../../dist/apps/api-gateway/index.js",
+    "build": "tsc -p tsconfig.json",
+    "start": "bun run dist/index.js",
     "lint": "eslint src --ext .ts",
     "clean": "rm -rf dist"
   },
