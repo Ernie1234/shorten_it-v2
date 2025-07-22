@@ -43,7 +43,7 @@ const monorepoRoot = findMonorepoRoot(startDir);
 
 if (monorepoRoot) {
   const envPath = path.join(monorepoRoot, '.env');
-  dotenv.config({ path: envPath });
+  dotenv.config({ path: envPath, override: false });
   console.log('--- API GATEWAY ENV DEBUG ---');
   console.log('Monorepo Root Found:', monorepoRoot);
   console.log('Attempting to load .env from:', envPath);
@@ -69,6 +69,9 @@ console.log(
   process.env.AUTH_SERVICE_URL ? 'Loaded' : 'NOT Loaded',
 );
 console.log('--- END API GATEWAY ENV DEBUG ---');
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config(); // Loads .env from CWD if not in production
+}
 
 import {
   errorHandler,
