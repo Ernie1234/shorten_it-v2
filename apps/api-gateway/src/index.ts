@@ -64,6 +64,10 @@ console.log(
   process.env.GOOGLE_CLIENT_SECRET ? 'Loaded' : 'NOT Loaded',
 );
 console.log('MONGO_URI (after API GATEWAY load):', process.env.MONGO_URI ? 'Loaded' : 'NOT Loaded');
+console.log(
+  'AUTH_SERVICE_URL (after API GATEWAY load):',
+  process.env.AUTH_SERVICE_URL ? 'Loaded' : 'NOT Loaded',
+);
 console.log('--- END API GATEWAY ENV DEBUG ---');
 
 import {
