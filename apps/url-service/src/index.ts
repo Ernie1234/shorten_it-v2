@@ -69,7 +69,7 @@ console.log('REDIS_PASSWORD (after load):', process.env.REDIS_PASSWORD ? 'Loaded
 console.log('--- END ENV DEBUG ---');
 
 const app = express();
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.URL_SERVICE_PORT || 5002;
 const MONGO_URI = process.env.MONGO_URI!;
 
 // Connect to MongoDB

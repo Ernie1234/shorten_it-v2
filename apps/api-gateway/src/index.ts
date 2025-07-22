@@ -83,7 +83,7 @@ import { authenticateToken } from './middleware/authMiddleware';
 import swaggerSpec from './swagger';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.API_GATEWAY_PORT || 5000;
 
 // Set trust proxy to 1 for correct IP detection behind proxies/load balancers
 app.set('trust proxy', 1);
