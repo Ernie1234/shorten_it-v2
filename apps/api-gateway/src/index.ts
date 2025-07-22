@@ -24,54 +24,64 @@ declare global {
   }
 }
 
-// Function to find the monorepo root (keep as is)
-function findMonorepoRoot(startDir: string): string | null {
-  let currentDir = startDir;
-  while (currentDir !== path.parse(currentDir).root) {
-    const packageJsonPath = path.join(currentDir, 'package.json');
-    const envPath = path.join(currentDir, '.env');
-    if (fs.existsSync(packageJsonPath) && fs.existsSync(envPath)) {
-      return currentDir;
+// --- START: Environment Variable Loading Logic (MODIFIED) ---
+// This block will only attempt to load .env files if not in a production environment.
+// On Render, process.env variables are already available.
+if (process.env.NODE_ENV !== 'production') {
+  // Function to find the monorepo root (only needed for local .env loading)
+  function findMonorepoRoot(startDir: string): string | null {
+    let currentDir = startDir;
+    while (currentDir !== path.parse(currentDir).root) {
+      const packageJsonPath = path.join(currentDir, 'package.json');
+      const envPath = path.join(currentDir, '.env');
+      if (fs.existsSync(packageJsonPath) && fs.existsSync(envPath)) {
+        return currentDir;
+      }
+      currentDir = path.dirname(currentDir);
     }
-    currentDir = path.dirname(currentDir);
+    return null;
   }
-  return null;
+
+  const startDir = process.cwd();
+  const monorepoRoot = findMonorepoRoot(startDir);
+
+  if (monorepoRoot) {
+    const envPath = path.join(monorepoRoot, '.env');
+    dotenv.config({ path: envPath });
+    console.log('--- API GATEWAY ENV DEBUG (Local .env loaded) ---');
+    console.log('Monorepo Root Found:', monorepoRoot);
+    console.log('Attempting to load .env from:', envPath);
+  } else {
+    console.warn('--- API GATEWAY ENV DEBUG (Local .env fallback) ---');
+    console.warn('Could not find monorepo root. Loading .env from default location (CWD).');
+    dotenv.config();
+  }
 }
 
-const startDir = process.cwd();
-const monorepoRoot = findMonorepoRoot(startDir);
+// --- END: Environment Variable Loading Logic ---
 
-if (monorepoRoot) {
-  const envPath = path.join(monorepoRoot, '.env');
-  dotenv.config({ path: envPath, override: false });
-  console.log('--- API GATEWAY ENV DEBUG ---');
-  console.log('Monorepo Root Found:', monorepoRoot);
-  console.log('Attempting to load .env from:', envPath);
-} else {
-  console.warn('--- API GATEWAY ENV DEBUG ---');
-  console.warn('Could not find monorepo root. Loading .env from default location (CWD).');
-  dotenv.config();
-}
-
+// --- START: Logging actual process.env values (ALWAYS log these for debugging) ---
+console.log('--- API GATEWAY ENV DEBUG (from process.env) ---');
 console.log(
-  'GOOGLE_CLIENT_ID (after API GATEWAY load):',
+  'GOOGLE_CLIENT_ID (from process.env):',
   process.env.GOOGLE_CLIENT_ID
     ? 'Loaded (starts with ' + process.env.GOOGLE_CLIENT_ID.substring(0, 5) + '...)'
     : 'NOT Loaded',
 );
 console.log(
-  'GOOGLE_CLIENT_SECRET (after API GATEWAY load):',
+  'GOOGLE_CLIENT_SECRET (from process.env):',
   process.env.GOOGLE_CLIENT_SECRET ? 'Loaded' : 'NOT Loaded',
 );
-console.log('MONGO_URI (after API GATEWAY load):', process.env.MONGO_URI ? 'Loaded' : 'NOT Loaded');
+console.log('MONGO_URI (from process.env):', process.env.MONGO_URI ? 'Loaded' : 'NOT Loaded');
 console.log(
-  'AUTH_SERVICE_URL (after API GATEWAY load):',
-  process.env.AUTH_SERVICE_URL ? 'Loaded' : 'NOT Loaded',
+  'AUTH_SERVICE_URL (from process.env):',
+  process.env.AUTH_SERVICE_URL ? process.env.AUTH_SERVICE_URL : 'NOT Loaded', // Log the actual value
 );
-console.log('--- END API GATEWAY ENV DEBUG ---');
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config(); // Loads .env from CWD if not in production
-}
+console.log(
+  'URL_SERVICE_URL (from process.env):',
+  process.env.URL_SERVICE_URL ? process.env.URL_SERVICE_URL : 'NOT Loaded', // Log the actual value
+);
+console.log('--- END API GATEWAY ENV DEBUG (from process.env) ---');
 
 import {
   errorHandler,
