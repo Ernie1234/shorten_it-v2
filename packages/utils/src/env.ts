@@ -68,6 +68,7 @@ export const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   MONGO_URI: z.string().url(),
+  AUTH_SERVICE_URL: z.string(),
 });
 
 // Parse process.env against the schema to validate and get typed environment variables
@@ -77,4 +78,8 @@ console.log('--- ENV DEBUG (after validation) ---');
 console.log('GOOGLE_CLIENT_ID (validated):', env.GOOGLE_CLIENT_ID ? 'Loaded' : 'MISSING');
 console.log('GOOGLE_CLIENT_SECRET (validated):', env.GOOGLE_CLIENT_SECRET ? 'Loaded' : 'MISSING');
 console.log('MONGO_URI (validated):', env.MONGO_URI ? 'Loaded' : 'MISSING');
+console.log(
+  '(AUTH_SERVICE_URL):',
+  env.AUTH_SERVICE_URL ? 'Loaded auth_service_url' : "Couldn't load auth_service_url",
+);
 console.log('--- END ENV DEBUG (after validation) ---');
