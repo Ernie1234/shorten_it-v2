@@ -1,0 +1,13 @@
+// packages/types/tsconfig.json
+{
+  "extends": "../../packages/config/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src", // Needs to be correct for types
+    "declaration": true,
+    "noEmit": false, // If it has actual code, otherwise true or omit if only types
+    "baseUrl": "."
+  },
+  "include": ["src/**/*.ts"], // Should only include its own src
+  "exclude": ["node_modules", "dist"]
+}

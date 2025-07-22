@@ -1,0 +1,16 @@
+// packages/utils/tsconfig.json (Corrected)
+{
+  "extends": "../../packages/config/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "noEmit": false,
+    "baseUrl": ".",
+    "paths": {
+      "@repo/types": ["../types/dist"]
+    }
+  },
+  "include": ["src/**/*.ts"], // Remove any references to other packages' src
+  "exclude": ["node_modules", "dist"]
+}

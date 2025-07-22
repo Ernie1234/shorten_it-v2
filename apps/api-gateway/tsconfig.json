@@ -1,3 +1,4 @@
+//apps/api-gateway/tsconfig.json
 {
   "extends": "../../packages/config/tsconfig.json",
   "compilerOptions": {
@@ -30,8 +31,8 @@
     "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
-      "@repo/types": ["../../packages/types/src/index.ts"],
-      "@repo/utils": ["../../packages/utils/src/index.ts"]
+      "@repo/types": ["../../packages/types/dist"],
+      "@repo/utils": ["../../packages/utils/dist"]
     },
     "types": ["node"],
     "typeRoots": ["../../node_modules/@types", "./node_modules/@types"],

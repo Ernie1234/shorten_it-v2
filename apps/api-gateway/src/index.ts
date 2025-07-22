@@ -1,3 +1,5 @@
+// apps/api-gateway/index.ts
+
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import proxy from 'express-http-proxy';
