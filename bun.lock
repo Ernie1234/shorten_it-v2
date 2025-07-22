@@ -226,9 +226,6 @@
     "packages/types": {
       "name": "@repo/types",
       "version": "1.0.0",
-      "devDependencies": {
-        "typescript": "^5.5.3",
-      },
     },
     "packages/typescript-config": {
       "name": "@repo/typescript-config",
@@ -265,7 +262,6 @@
         "@types/express": "^4.17.21",
         "@types/ioredis": "^4.28.10",
         "@types/node": "^20.14.9",
-        "typescript": "^5.5.3",
       },
     },
   },
