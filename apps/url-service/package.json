@@ -5,10 +5,11 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "nodemon --exec bun src/index.ts",
-    "build": "tsc",
-    "start": "bun dist/index.js",
+    "build": "bun run copy-assets && bun tsc",
+    "start": "bun run dist/index.js",
     "lint": "eslint src --ext .ts",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "copy-assets": "cpx \"./swagger.yaml\" ./dist"
   },
   "dependencies": {
     "@repo/db": "workspace:*",
