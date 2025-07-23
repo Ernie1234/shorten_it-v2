@@ -71,8 +71,8 @@ export const envSchema = z.object({
   MONGO_URI: z.string().url(),
   // Ensure these are OPTIONAL if they might not be present in ALL environments (e.g., local .env)
   // If they are REQUIRED for the app to function on Render, they MUST be present there.
-  AUTH_SERVICE_URL: z.string().url(), // Keep as REQUIRED if they must always be there
-  URL_SERVICE_URL: z.string().url(), // Keep as REQUIRED if they must always be there
+  AUTH_SERVICE_URL: z.string().url().optional(), // Keep as REQUIRED if they must always be there
+  URL_SERVICE_URL: z.string().url().optional(), // Keep as REQUIRED if they must always be there
 });
 
 // Parse process.env against the schema to validate and get typed environment variables
