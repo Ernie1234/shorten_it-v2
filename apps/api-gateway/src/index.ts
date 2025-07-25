@@ -133,7 +133,7 @@ app.use(authenticateToken);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Auth Service Proxy
-const authServiceTarget = process.env.AUTH_SERVICE_URL || 'http://url-shortener-auth-service:5001';
+const authServiceTarget = process.env.AUTH_SERVICE_URL || 'https://shorten-it-v2.onrender.com';
 logger.info(`[API Gateway] Auth Service Proxy Target: ${authServiceTarget}`); // New log
 app.use('/api/auth', proxy(authServiceTarget));
 
