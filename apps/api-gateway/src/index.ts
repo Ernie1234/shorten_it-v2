@@ -137,9 +137,12 @@ const authServiceTarget = process.env.AUTH_SERVICE_URL || 'http://url-shortener-
 logger.info(`[API Gateway] Auth Service Proxy Target: ${authServiceTarget}`); // New log
 app.use('/api/auth', proxy(authServiceTarget));
 
+// URL Service Proxy
+const urlServiceTarget = process.env.URL_SERVICE_URL || 'http://url-shortener-url-service:5002'; // Corrected fallback
+logger.info(`[API Gateway] URL Service Proxy Target: ${urlServiceTarget}`); // New log
 app.use(
   '/api/urls',
-  proxy(process.env.URL_SERVICE_URL || 'http://localhost:5002', {
+  proxy(urlServiceTarget, {
     proxyReqPathResolver: (req) => {
       return req.url; // Use original URL path relative to '/api/urls'
     },
