@@ -27,36 +27,35 @@ declare global {
 // --- START: Environment Variable Loading Logic (MODIFIED) ---
 // This block will only attempt to load .env files if not in a production environment.
 // On Render, process.env variables are already available.
-if (process.env.NODE_ENV !== 'production') {
-  // Function to find the monorepo root (only needed for local .env loading)
-  function findMonorepoRoot(startDir: string): string | null {
-    let currentDir = startDir;
-    while (currentDir !== path.parse(currentDir).root) {
-      const packageJsonPath = path.join(currentDir, 'package.json');
-      const envPath = path.join(currentDir, '.env');
-      if (fs.existsSync(packageJsonPath) && fs.existsSync(envPath)) {
-        return currentDir;
-      }
-      currentDir = path.dirname(currentDir);
+// if (process.env.NODE_ENV !== 'production') {
+function findMonorepoRoot(startDir: string): string | null {
+  let currentDir = startDir;
+  while (currentDir !== path.parse(currentDir).root) {
+    const packageJsonPath = path.join(currentDir, 'package.json');
+    const envPath = path.join(currentDir, '.env');
+    if (fs.existsSync(packageJsonPath) && fs.existsSync(envPath)) {
+      return currentDir;
     }
-    return null;
+    currentDir = path.dirname(currentDir);
   }
-
-  const startDir = process.cwd();
-  const monorepoRoot = findMonorepoRoot(startDir);
-
-  if (monorepoRoot) {
-    const envPath = path.join(monorepoRoot, '.env');
-    dotenv.config({ path: envPath });
-    console.log('--- API GATEWAY ENV DEBUG (Local .env loaded) ---');
-    console.log('Monorepo Root Found:', monorepoRoot);
-    console.log('Attempting to load .env from:', envPath);
-  } else {
-    console.warn('--- API GATEWAY ENV DEBUG (Local .env fallback) ---');
-    console.warn('Could not find monorepo root. Loading .env from default location (CWD).');
-    dotenv.config();
-  }
+  return null;
 }
+
+const startDir = process.cwd();
+const monorepoRoot = findMonorepoRoot(startDir);
+
+if (monorepoRoot) {
+  const envPath = path.join(monorepoRoot, '.env');
+  dotenv.config({ path: envPath, override: true }); // Force override
+  console.log('--- API GATEWAY ENV DEBUG (Local .env loaded - FORCED) ---');
+  console.log('Monorepo Root Found:', monorepoRoot);
+  console.log('Attempting to load .env from:', envPath);
+} else {
+  console.warn('--- API GATEWAY ENV DEBUG (Local .env fallback - FORCED) ---');
+  console.warn('Could not find monorepo root. Loading .env from default location (CWD).');
+  dotenv.config({ override: true }); // Force override
+}
+// }
 
 // --- END: Environment Variable Loading Logic ---
 
