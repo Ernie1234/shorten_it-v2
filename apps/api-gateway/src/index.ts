@@ -133,7 +133,14 @@ app.use(authenticateToken);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Auth Service Proxy - Strip /api/auth prefix before forwarding
-app.use('/api/auth', proxy(process.env.AUTH_SERVICE_URL || 'http://localhost:5001'));
+app.use(
+  '/api/auth',
+  proxy(
+    process.env.AUTH_SERVICE_URL ||
+      'http://url-shortener-auth-service:5001' ||
+      'http://localhost:5001',
+  ),
+);
 
 // URL Service Proxy - Strip /api/urls prefix before forwarding
 // app.use('/api/urls', proxy(process.env.URL_SERVICE_URL || 'http://localhost:5002'));
