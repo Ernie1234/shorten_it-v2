@@ -132,19 +132,11 @@ app.use(authenticateToken);
 // Swagger Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Auth Service Proxy - Strip /api/auth prefix before forwarding
-app.use(
-  '/api/auth',
-  proxy(
-    process.env.AUTH_SERVICE_URL ||
-      'http://url-shortener-auth-service:5001' ||
-      'http://localhost:5001',
-  ),
-);
+// Auth Service Proxy
+const authServiceTarget = process.env.AUTH_SERVICE_URL || 'http://url-shortener-auth-service:5001';
+logger.info(`[API Gateway] Auth Service Proxy Target: ${authServiceTarget}`); // New log
+app.use('/api/auth', proxy(authServiceTarget));
 
-// URL Service Proxy - Strip /api/urls prefix before forwarding
-// app.use('/api/urls', proxy(process.env.URL_SERVICE_URL || 'http://localhost:5002'));
-// URL Service Proxy - Strip /api/urls prefix before forwarding
 app.use(
   '/api/urls',
   proxy(process.env.URL_SERVICE_URL || 'http://localhost:5002', {
