@@ -118,15 +118,16 @@ app.use(
 app.use(metricsMiddleware);
 
 // --- NEW: express-rate-limit configuration ---
-// const apiLimiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: (req: Request) => (req.user ? 1000 : 100), // 1000 requests for authenticated, 100 for unauthenticated
-//   message: { success: false, message: 'Too many requests, please try again later!' },
-//   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-//   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-//   keyGenerator: (req: Request) => req.ip || 'unknown-ip',
-// });
-// app.use(apiLimiter);
+const apiLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 15 minutes
+  // max: (req: Request) => (req.user ? 1000 : 100), // 1000 requests for authenticated, 100 for unauthenticated
+  max: 999999,
+  message: { success: false, message: 'Too many requests, please try again later!' },
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  keyGenerator: (req: Request) => req.ip || 'unknown-ip',
+});
+app.use(apiLimiter);
 app.use(authenticateToken);
 
 // Swagger Docs
