@@ -21,17 +21,21 @@ export const httpRequestDurationSeconds = new client.Histogram({
 });
 
 // Middleware to collect metrics
+// Middleware to collect metrics
 export const metricsMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const end = httpRequestDurationSeconds.startTimer();
   res.on('finish', () => {
+    // Correcting the type for the route label
+    const routePath = (req.route?.path || req.path) as string;
+
     httpRequestCounter.inc({
       method: req.method,
-      route: req.route?.path || req.path, // Use req.route.path for parameterized routes
+      route: routePath,
       status_code: res.statusCode,
     });
     end({
       method: req.method,
-      route: req.route?.path || req.path,
+      route: routePath,
       status_code: res.statusCode,
     });
   });
